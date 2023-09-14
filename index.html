@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Análise Estatística</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+<body>
+    <header>
+        <h1>Análise Estatística</h1>
+    </header>
+    <main>
+        <div id="form_math" class="container">
+            <form id="form_math" method="post">
+                <div class="row">   
+                    <div class="input-group">
+                        <span class="input-group-text">Inserir dados</span>
+                        <textarea class="form-control" aria-label="With textarea"></textarea>
+                    </div>
+                    <p><br>Ou</p>
+                    <div class="input-group mb-3">
+                        <input type="file" class="form-control" id="inputGroupFile02" name="arquivo">
+                        <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                    </div>
+                    <div class="mb-3 d-inline-block">
+                        <!-- <div class="mb-3 d-inline-block"> -->
+                            <div class="mb-3">
+                                <input type="checkbox" class="btn-check" id="calc_media" checked autocomplete="off">
+                                <label class="btn btn-outline-secondary" for="calc_media">Calcular Media</label><br>
+                            </div>
+                            <div class="mb-3">
+                                <input type="checkbox" class="btn-check" id="calc_mediana" checked autocomplete="off">
+                                <label class="btn btn-outline-secondary" for="calc_mediana">Calcular Mediana</label><br>
+                            </div>
+                            <div class="mb-3">
+                                <input type="checkbox" class="btn-check" id="calc_moda" checked autocomplete="off">
+                                <label class="btn btn-outline-secondary" for="calc_moda">Calcular Moda</label><br>
+                            </div>
+                            <div class="mb-3">
+                                <input type="checkbox" class="btn-check" id="calc_max" checked autocomplete="off">
+                                <label class="btn btn-outline-secondary" for="calc_max">Calcular Maximo</label><br>
+                            </div>
+                            <div class="mb-3">
+                                <input type="checkbox" class="btn-check" id="calc_min" checked autocomplete="off">
+                                <label class="btn btn-outline-secondary" for="calc_min">Calcular Mínimo</label><br>
+                            </div>
+                            <div class="mb-3">
+                                <input type="checkbox" class="btn-check" id="frequency" checked autocomplete="off">
+                                <label class="btn btn-outline-secondary" for="frequency">Tabela de Frequência</label><br>
+                            </div>
+                        <!-- </div> -->
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Prosseguir</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="result">
+            <table class="table table-striped-columns">
+            </table>
+        </div>
+        <div id="frequence">
+            <table class="table table-striped table-hover">
+            </table>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2023 Eu, eu mesmo e sereno</p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src='https://unpkg.com/simple-statistics@7.8.2/dist/simple-statistics.min.js'></script>
+    <script src="script.js"></script>
+</body>
+</html>
