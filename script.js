@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
             calcularModa: document.getElementById('calc_moda').checked,
             calcularMaximo: document.getElementById('calc_max').checked,
             calcularMinimo: document.getElementById('calc_min').checked,
+            calcularPerc: document.getElementById('calc_perc').checked,
             frequency: document.getElementById('frequency').checked,
             arquivo: document.querySelector('input[type="file"]').files[0],
         };
@@ -33,29 +34,12 @@ document.addEventListener('DOMContentLoaded', function () {
             tableResult(formData, dataValues);
         }else if(formData.dados){
             const dataValues = formData.dados.split(';').map(item => parseFloat(item.trim()));
-            console.log('Dados do formulário:', formData);
-            if(formData.calcularMedia){
-                const media = ss.mean(dataValues);
-                console.log('Média:', media);
-            }
-            if(formData.calcularMediana){
-                const mediana = ss.median(dataValues);
-                console.log('Mediana:', mediana);
-            }
-            if(formData.calcularModa){
-                const moda = ss.mode(dataValues);
-                console.log('Moda:', moda);
-            }
-            if(formData.calcularMaximo){
-                const maximo = ss.max(dataValues);
-                console.log('Máximo:', maximo);
-            }
-            if(formData.calcularMinimo){
-                const minimo = ss.min(dataValues);
-                console.log('Mínimo:', minimo);
-            }
-            
+            console.log('Dados do formulário:', formData);      
             tableResult(formData, dataValues);
+
+            if(formData.calcularPerc){
+                tablePercentil(dataValues);
+            }
 
             if(formData.frequency){
                 let k;
@@ -72,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function tableResult(formData, dataValues) {
         const resultDiv = document.getElementById('result');
         const tabela = document.createElement('table');
-        tabela.classList.add('table', 'table-striped-columns');
+        tabela.classList.add('table', 'table-responsive');
     
         const thead = document.createElement('thead');
         const trCabecalho = document.createElement('tr');
@@ -133,6 +117,96 @@ document.addEventListener('DOMContentLoaded', function () {
         resultDiv.appendChild(tabela);
     }
 
+    function tablePercentil(dataValues) {
+        const percentDiv = document.getElementById('percentis');
+        const tablePerc = document.createElement('table');
+        tablePerc.classList.add('table', 'caption-top');
+        const captionP = document.createElement('caption');
+        captionP.textContent = 'Percentis';
+        tablePerc.appendChild(captionP);
+    
+        const head = document.createElement('thead');
+        const trHead = document.createElement('tr');
+        const cols = ['Percentil 10', 'Percentil 15', 'Percentil 25', 'Percentil 45', 'Percentil 50', 'Percentil 75', 'Percentil 90'];
+    
+        cols.forEach(coluna => {
+            const th = document.createElement('th');
+            th.textContent = coluna;
+            trHead.appendChild(th);
+        });
+
+        head.appendChild(trHead);
+        tablePerc.appendChild(head);
+        
+        const body = document.createElement('tbody');
+        const trValues = document.createElement('tr');
+        
+        const sortedData = dataValues.sort((a, b) => a - b);      
+        console.log('Dados Ordenados:', sortedData);   
+
+        function percentil(arr, q) { // calcule percentils
+            const pos = (arr.length - 1) * q;
+            const base = Math.floor(pos);
+            const rest = pos - base;
+            if (arr[base + 1] !== undefined) {
+                return arr[base] + rest * (arr[base + 1] - arr[base]);
+            } else {
+                return arr[base];
+            }
+        }
+       
+        const percentis = [0.1, 0.15, 0.25, 0.45, 0.5, 0.75, 0.9];
+
+        percentis.forEach(percentile => {
+            const num = percentil(sortedData, percentile);
+            const td = document.createElement('td');
+            td.textContent = num;
+            trValues.appendChild(td);
+        });
+
+        body.appendChild(trValues);
+        tablePerc.appendChild(body);
+    
+        // Adicione a tablePerc à div de resultados
+        percentDiv.innerHTML = ''; // Limpe qualquer conteúdo existente na div
+        percentDiv.appendChild(tablePerc);
+
+        // tableDescPercent();
+    }
+    /* function tableDescPercent() {
+        const descPercent = document.getElementById('desc-percent');
+        const tableDesc = document.createElement('table');
+        tableDesc.classList.add('table', 'caption-top');
+    
+        const dHead = document.createElement('thead');
+        const headDesc = document.createElement('tr');
+        const columns = ['Percentil 45'];
+    
+        columns.forEach(coluna => {
+            const thDesc = document.createElement('th');
+            thDesc.textContent = coluna;
+            headDesc.appendChild(thDesc);
+        });
+
+        dHead.appendChild(headDesc);
+        tableDesc.appendChild(dHead);
+        
+        const bodyDesc = document.createElement('tbody');
+        const trVal = document.createElement('tr');
+        
+        var tdPerc = document.createElement('td');
+        tdPerc.textContent = '45% dos elementos estão abaixo de 3.92, ou seja, abaixo da média e da mediana';
+        trVal.appendChild(tdPerc);
+
+        bodyDesc.appendChild(trVal);
+        tableDesc.appendChild(bodyDesc);
+    
+        // Adicione a tablePerc à div de resultados
+        descPercent.innerHTML = ''; // Limpe qualquer conteúdo existente na div
+        descPercent.appendChild(tableDesc);
+    } */
+
+
     function frequencyTable(dataValues, numClasses) {
         const min = Math.min(...dataValues);
         const max = Math.max(...dataValues);
@@ -160,14 +234,17 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     
-        // Construa a tabela de frequências
+        const frequenceDiv = document.getElementById('frequence');
         const tab = document.createElement('table');
-        tab.classList.add('table', 'table-hover');
+        tab.classList.add('table', 'caption-top');
+        const caption = document.createElement('caption');
+        caption.textContent = 'Tabela de Frequências';
+        tab.appendChild(caption);
         const thead = document.createElement('thead');
         const tbody = document.createElement('tbody');
         
         // Cabeçalho da tabela
-        const cabecalho = ['Classes', 'Frequência Absoluta', 'Frequência Relativa ', 'Frequência Relativa (%)'];
+        const cabecalho = ['Classes', 'Frequência Absoluta', 'Frequência Relativa', 'Frequência Relativa (%)', 'Frequência Acumulativa'];
         const trCabecalho = document.createElement('tr');
         cabecalho.forEach(item => {
             const th = document.createElement('th');
@@ -175,8 +252,9 @@ document.addEventListener('DOMContentLoaded', function () {
             trCabecalho.appendChild(th);
         });
         thead.appendChild(trCabecalho);
-    
+        
         // Corpo da tabela
+        let frequenciaAcumulativa = 0;
         for (let i = 0; i < numClasses; i++) {
             const tr = document.createElement('tr');
             const tdClasse = document.createElement('td');
@@ -189,11 +267,15 @@ document.addEventListener('DOMContentLoaded', function () {
             const tdFreqRel = document.createElement('td');
             const freqRel = (frequenciaAbsoluta[i] / dataValues.length);
             tdFreqRel.textContent = freqRel.toFixed(2) + '%';
+            frequenciaAcumulativa += frequenciaAbsoluta[i];
+            const tdFreqAcumulativa = document.createElement('td');
+            tdFreqAcumulativa.textContent = frequenciaAcumulativa;
     
             tr.appendChild(tdClasse);
             tr.appendChild(tdFreqAbsoluta);
             tr.appendChild(tdFreqRel);
             tr.appendChild(tdFreqRelativa);
+            tr.appendChild(tdFreqAcumulativa);
     
             tbody.appendChild(tr);
         }
@@ -202,7 +284,6 @@ document.addEventListener('DOMContentLoaded', function () {
         tab.appendChild(tbody);
     
         // Adicione a tabela à página
-        const frequenceDiv = document.getElementById('frequence');
         frequenceDiv.innerHTML = ''; // Limpe qualquer conteúdo existente
         frequenceDiv.appendChild(tab);
     }
